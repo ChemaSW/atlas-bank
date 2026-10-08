@@ -1,20 +1,26 @@
 package com.atlas.bank.atlas_bank.account.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+//@Data puede tener problematica en una @Entity si tiene relaciones (One to One, One to many...ect)
+    // ya que genera el equal() and hashCode - Puede ocasionar problemas indeseados,
+    // como lo que se denomina el Lazy loading involuntario. Si tenemos una relación puede acceder
+    // a esos campos y eso puede disparar consultas a la BD sin que nosotros lo esperemos
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include //Solo incluimos este campo en el equals and hashCode
     private Long id;
     private String accountNumber;
     private String ownerName;
