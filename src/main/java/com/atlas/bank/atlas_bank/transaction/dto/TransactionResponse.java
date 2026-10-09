@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class TransferResponse {
+public class TransactionResponse {
     private Long id;
 
     private String type; // DEPOSIT, WITHDRAWAL, TRANSFER
