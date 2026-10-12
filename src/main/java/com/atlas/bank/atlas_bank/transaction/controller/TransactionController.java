@@ -1,5 +1,6 @@
 package com.atlas.bank.atlas_bank.transaction.controller;
 
+import com.atlas.bank.atlas_bank.transaction.dto.TransactionMapper;
 import com.atlas.bank.atlas_bank.transaction.dto.TransferRequest;
 import com.atlas.bank.atlas_bank.transaction.dto.TransactionResponse;
 import com.atlas.bank.atlas_bank.transaction.model.Transaction;
@@ -18,6 +19,7 @@ public class TransactionController {
 
     private final ITransferService transferService;
     private final ITransactionQueryService transactionQueryService;
+    private final TransactionMapper transactionMapper;
 
 //    @PostMapping("/transfer")           //@RequestParam es comun en filtros, búsquedas, paginación, ordenamiento y opciones - ¿Como quiero obtener el objeto?
 //    public ResponseEntity<Transaction> transfer(@RequestParam Long fromId,
@@ -33,7 +35,7 @@ public class TransactionController {
                 request.getToAccountId(),
                 request.getAmount()
         );
-        return ResponseEntity.ok(toResponse(transaction));
+        return ResponseEntity.ok(transactionMapper.toResponse(transaction));
     }
 
     @GetMapping("/{id}/transactions") //Retorna una lista de transacciones
@@ -41,22 +43,10 @@ public class TransactionController {
         //return ResponseEntity.ok(transactionQueryService.getByAccountId(accountId));
         List<TransactionResponse> response = transactionQueryService.getByAccountId(accountId)
                 .stream()
-                .map(this::toResponse)
+                .map(transactionMapper::toResponse)
                 .toList();
         return ResponseEntity.ok(response);
     }
 
-        //Mapeado de DTO en base al Enitity
-    private TransactionResponse toResponse(Transaction transaction){
-        TransactionResponse response = new TransactionResponse();
-        response.setId(transaction.getId());
-        response.setType(transaction.getType());
-        response.setSourceAccountId(transaction.getSourceAccountId());
-        response.setTargetAccountId(transaction.getTargetAccountId());
-        response.setAmount(transaction.getAmount());
-        response.setFee(transaction.getFee());
-        response.setStatus(transaction.getStatus());
-        response.setCreatedAt(transaction.getCreatedAt());
-        return response;
-    }
+
 }
