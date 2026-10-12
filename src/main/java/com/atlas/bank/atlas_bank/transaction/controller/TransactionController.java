@@ -27,7 +27,7 @@ public class TransactionController {
 //                                                @RequestParam BigDecimal amount){
 //        return ResponseEntity.ok(transferService.execute(fromId, toId, amount));
 //    }
-
+        //Cambio de realizar una transaccion, en vez de usar parametros en la url lo haremos por medio de un body JSON
     @PostMapping("/transfer")
     public ResponseEntity<TransactionResponse> transfer(@RequestBody TransferRequest request){
         Transaction transaction = transferService.execute(//metodo del service
