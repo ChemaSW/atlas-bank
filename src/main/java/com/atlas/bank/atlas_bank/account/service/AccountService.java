@@ -1,7 +1,9 @@
 package com.atlas.bank.atlas_bank.account.service;
 
+import com.atlas.bank.atlas_bank.account.exception.AccountNotFoundException;
 import com.atlas.bank.atlas_bank.account.model.Account;
 import com.atlas.bank.atlas_bank.account.repository.AccountRepository;
+import com.atlas.bank.atlas_bank.transaction.exception.AccountNotActiveException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,7 @@ public class AccountService implements IAccountService {
     @Override
     public Account findById(Long id){
         return accountRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Cuenta no encontrada")
+                () -> new AccountNotFoundException(id)
         );
     }
 
