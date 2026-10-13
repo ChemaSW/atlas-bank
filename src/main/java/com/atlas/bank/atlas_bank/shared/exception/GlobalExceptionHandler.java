@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //Clase que captura todas las excepciones que aparezcan en nuestro sistema de forma centralizada
@@ -55,7 +56,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ProblemDetail handlerGeneral(Exception ex){
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()
+                HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor"
         );
 
         problem.setTitle("Error interno");
@@ -63,17 +64,21 @@ public class GlobalExceptionHandler {
     }
 
         //Excepcion que gestiona las validaciones
-    @ExceptionHandler(MethodArgumentNotValidException.class) //Si falla algo se dispara esta clase, donde atrapa y guardara los errores en una lista
-    public ProblemDetail handlerGeneral(MethodArgumentNotValidException ex){
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Error de validación");
 
-        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
-                                        //campo del error           //mesnaje de error en validaciones
-                .map(error -> error.getField() + ": "+ error.getDefaultMessage()) //mapeamos el mensaje de error
-                .toList();
+        // ---- Errores Globales (campos, clases...)
+        List<String> errors = new ArrayList<>();
+        ex.getBindingResult().getFieldErrors()
+                .forEach( error -> errors.add(error.getField() + ": " + error.getDefaultMessage()));
 
-        problem.setProperty("errors", errors); //seteo de property, para setear el listado de errores
+        //Acceder a los errores globales
+        ex.getBindingResult().getGlobalErrors()
+                .forEach(error -> errors.add(error.getDefaultMessage()));
+
+        problem.setProperty("errors", errors);//seteo de property, para setear el listado de errores
 
         return problem;
     }
