@@ -6,6 +6,7 @@ import com.atlas.bank.atlas_bank.transaction.dto.TransactionResponse;
 import com.atlas.bank.atlas_bank.transaction.model.Transaction;
 import com.atlas.bank.atlas_bank.transaction.service.ITransactionQueryService;
 import com.atlas.bank.atlas_bank.transaction.service.ITransferService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class TransactionController {
 //    }
         //Cambio de realizar una transaccion, en vez de usar parametros en la url lo haremos por medio de un body JSON
     @PostMapping("/transfer")
-    public ResponseEntity<TransactionResponse> transfer(@RequestBody TransferRequest request){
+    public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest request){
         Transaction transaction = transferService.execute(//metodo del service
                 request.getFromAccountId(),
                 request.getToAccountId(),
