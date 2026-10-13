@@ -7,6 +7,7 @@ import com.atlas.bank.atlas_bank.account.model.Account;
 import com.atlas.bank.atlas_bank.account.service.IAccountService;
 import com.atlas.bank.atlas_bank.transaction.service.ITransactionQueryService;
 import com.atlas.bank.atlas_bank.transaction.service.ITransferService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,8 @@ public class AccountController {
     //ResponseEntity - devuelve una respuesta HTTP completa, desde el contenido hasta el status code y body
 
     @PostMapping            // @RequestBody -> Recibe un cuerpo JSON - ¿Que informacion estoy enviando?
-    public ResponseEntity<AccountResponse> create(@RequestBody CreateAccountRequest request) {
-        //Creacion de entity
+    public ResponseEntity<AccountResponse> create(@Valid @RequestBody CreateAccountRequest request) {
+        //Creacion de entity                    //@Valid se pone antes del RequestBody
         Account account = accountMapper.toEntity(request);
 
             //Realizamos el create del servicio
