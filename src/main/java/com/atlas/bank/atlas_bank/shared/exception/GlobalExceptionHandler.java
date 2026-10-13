@@ -6,8 +6,11 @@ import com.atlas.bank.atlas_bank.transaction.exception.InsufficientFundsExceptio
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
 
 //Clase que captura todas las excepciones que aparezcan en nuestro sistema de forma centralizada
 @RestControllerAdvice
@@ -56,6 +59,22 @@ public class GlobalExceptionHandler {
         );
 
         problem.setTitle("Error interno");
+        return problem;
+    }
+
+        //Excepcion que gestiona las validaciones
+    @ExceptionHandler(MethodArgumentNotValidException.class) //Si falla algo se dispara esta clase, donde atrapa y guardara los errores en una lista
+    public ProblemDetail handlerGeneral(MethodArgumentNotValidException ex){
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Error de validación");
+
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+                                        //campo del error           //mesnaje de error en validaciones
+                .map(error -> error.getField() + ": "+ error.getDefaultMessage()) //mapeamos el mensaje de error
+                .toList();
+
+        problem.setProperty("errors", errors); //seteo de property, para setear el listado de errores
+
         return problem;
     }
 
