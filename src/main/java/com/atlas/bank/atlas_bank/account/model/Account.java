@@ -17,17 +17,32 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "accounts")
 public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include //Solo incluimos este campo en el equals and hashCode
     private Long id;
+
+    @Column(name = "account_number", nullable = false, unique = true) //No puede ser nulo, es unico
     private String accountNumber;
+
+    @Column(name = "owner_name", nullable = false)
     private String ownerName;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false, length = 20)
     private String type; // Saving, Cheking (cuenta de ahorro, cuenta corriente)
+
+    @Column(nullable = false)
     private BigDecimal balance;
+
+    @Column(nullable = false, length = 20)
     private String status; // Active, Closed, Frozen
+
+    @Column(name = "create_at", nullable = false, updatable = false) //este campo no puede ser modificado
     private LocalDateTime createAt;
 
         // Callback para asignar valores por Defecto al momento de crear un objeto, solo para @Entity, no se puede implementar en DTOs/VO
