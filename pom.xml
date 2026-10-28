@@ -34,6 +34,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-h2console</artifactId>
 		</dependency>
+        <!--Resource Server, en el modelo OAuth2 hay 3 actores, El primero es el usuario,
+            El segundo el Authorization Server, en nuestro caso es el Keycloack de proyecto,
+            El tercero es Resoruce Server es nuestra API de Spring Boot, y por eso agregamos esta dependencia, Solo revisa TOKENS (Resource Server)-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
